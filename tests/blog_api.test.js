@@ -143,9 +143,29 @@ describe("api", () => {
 
     expect(blogsAtEnd).toHaveLength(initialNumberOfBlogs - 1);
 
-    const contents = blogsAtEnd.map((r) => r.content);
+    expect(blogsAtEnd).not.toContain(blogToDelete);
+  });
 
-    expect(contents).not.toContain(blogToDelete.content);
+  test("check update of blog", async () => {
+    const response = await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    const blogToUpdate = response.body[0];
+    const updateLikes = { likes: 7 };
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updateLikes)
+      .expect(200);
+
+    const responseUpdated = await api
+      .get(`/api/blogs/${blogToUpdate.id}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    expect(responseUpdated.body.likes).toBe(updateLikes.likes);
   });
 
   afterAll(() => {
