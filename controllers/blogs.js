@@ -6,11 +6,29 @@ blogsRouter.get("/", async (request, response) => {
   response.json(blogs);
 });
 
-blogsRouter.post("/", async (request, response) => {
+blogsRouter.get("/:id", async (request, response, next) => {
+  try {
+    const blog = await Blog.findById(request.params.id);
+
+    if (blog) {
+      response.json(blog);
+    } else {
+      response.status(404).end();
+    }
+  } catch (exception) {
+    next(exception);
+  }
+});
+
+blogsRouter.post("/", async (request, response, next) => {
   const blog = new Blog(request.body);
 
-  const result = await blog.save();
-  response.status(201).json(result);
+  try {
+    const result = await blog.save();
+    response.status(201).json(result);
+  } catch (exception) {
+    next(exception);
+  }
 });
 
 module.exports = blogsRouter;
