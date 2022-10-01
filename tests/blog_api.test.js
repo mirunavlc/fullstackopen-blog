@@ -124,6 +124,30 @@ describe("api", () => {
       .expect("Content-Type", /application\/json/);
   }, 10000);
 
+  test("check deletion of blog", async () => {
+    const response = await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    const initialNumberOfBlogs = response.body.length;
+    const blogToDelete = response.body[0];
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+    const finalResponse = await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+    const blogsAtEnd = finalResponse.body;
+
+    expect(blogsAtEnd).toHaveLength(initialNumberOfBlogs - 1);
+
+    const contents = blogsAtEnd.map((r) => r.content);
+
+    expect(contents).not.toContain(blogToDelete.content);
+  });
+
   afterAll(() => {
     mongoose.connection.close();
   });

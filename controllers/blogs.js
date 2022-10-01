@@ -20,6 +20,19 @@ blogsRouter.get("/:id", async (request, response, next) => {
   }
 });
 
+blogsRouter.delete("/:id", async (request, response, next) => {
+  try {
+    const blog = await Blog.findByIdAndRemove(request.params.id);
+    if (blog) {
+      response.status(204).end();
+    } else {
+      response.status(404).end();
+    }
+  } catch (exception) {
+    next(exception);
+  }
+});
+
 blogsRouter.post("/", async (request, response, next) => {
   const blog = new Blog(request.body);
 
