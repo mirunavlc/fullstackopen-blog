@@ -1,8 +1,9 @@
 const { expect } = require("expect");
+const testHelper = require("./test_helper");
 const listHelper = require("../utils/list_helper");
 
 describe("total likes", () => {
-  const blogs = listHelper.listWithManyBlogs();
+  const blogs = testHelper.listWithManyBlogs();
   const listWithOneBlog = listHelper.listWithOneBlog();
 
   test("when list has only one blog, equals the likes of that", () => {
