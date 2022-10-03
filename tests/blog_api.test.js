@@ -34,7 +34,6 @@ describe("api", () => {
 
   test("check creation of blog", async () => {
     const blog = helper.listWithOneBlog()[0];
-    console.log(blog);
     await api
       .post("/api/blogs")
       .send(blog)
@@ -144,7 +143,7 @@ describe("api", () => {
     expect(blogsAtEnd).toHaveLength(initialNumberOfBlogs - 1);
 
     expect(blogsAtEnd).not.toContain(blogToDelete);
-  });
+  }, 10000);
 
   test("check update of blog", async () => {
     const response = await api
@@ -166,7 +165,7 @@ describe("api", () => {
       .expect("Content-Type", /application\/json/);
 
     expect(responseUpdated.body.likes).toBe(updateLikes.likes);
-  });
+  }, 10000);
 
   afterAll(() => {
     mongoose.connection.close();
