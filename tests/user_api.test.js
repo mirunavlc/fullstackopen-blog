@@ -61,4 +61,39 @@ describe("when there is initially one user in db", () => {
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toEqual(usersAtStart);
   });
+
+  test("Creation fails with proper statuscode if password is shorter than 3 chars", async () => {
+    const newUser = {
+      username: "koko",
+      name: "Corina",
+      password: "a1",
+    };
+
+    const result = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    expect(result.body.error).toContain(
+      "User validation failed: Expected `password` to be min. 3 chars"
+    );
+  });
+  test("Creation fails with proper statuscode if username is shorter than 3 chars", async () => {
+    const newUser = {
+      username: "ko",
+      name: "Corina",
+      password: "a11111",
+    };
+
+    const result = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    expect(result.body.error).toContain(
+      `is shorter than the minimum allowed length`
+    );
+  });
 });
