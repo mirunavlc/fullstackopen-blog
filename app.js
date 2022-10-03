@@ -5,9 +5,11 @@ const blogsRouter = require("./controllers/blogs");
 const usersRouter = require("./controllers/users");
 const loginRouter = require("./controllers/login");
 const errorHandler = require("./middleware/error");
+const tokenExtractor = require("./middleware/auth_token");
 
 app.use(cors());
 app.use(express.json());
+app.use(tokenExtractor);
 app.use("/api/blogs/", blogsRouter);
 app.use("/api/users/", usersRouter);
 app.use("/api/login/", loginRouter);
